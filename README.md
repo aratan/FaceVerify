@@ -1,6 +1,6 @@
 # Face Detection Application using Python and Artificial Vision
 
-![Application Screenshot](https://i.imgur.com/aMtJHwV.png)
+![Application Screenshot](https://github.com/aratan/idfaceml/blob/main/Captura%20de%20pantalla_2023-01-21_12-28-50.png?raw=true)
 
 ## Introduction
 
@@ -29,3 +29,7 @@ This application uses Python and Artificial Vision to detect faces in video. It 
 ## Conclusion
 
 This application demonstrates the capabilities of Python and Artificial Vision in detecting faces in images. It can be used as a starting point for more advanced projects in computer vision and image processing.
+
+
+# The Team: AratanCoders
+Víctor Arbiol
