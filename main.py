@@ -1,7 +1,8 @@
 # por el terminal externo funciona perfecto
-#import cv2
-#img = cv2.imread("./image.jpg")
-#print(img)
+# import cv2
+# img = cv2.imread("./image.jpg")
+# print(img)
+
 import face_recognition
 import cv2
 import os
@@ -13,10 +14,10 @@ nombres_caras = []
 
 # Directorio actual
 directorio = os.getcwd()
-path_caras = os.path.join(directorio, 'caras/')
+path_caras = os.path.join(directorio, "caras/")
 
 # Obtiene lista de fotos de caras en el directorio
-fotos_caras = [f for f in os.listdir(path_caras) if f.endswith('.jpg')]
+fotos_caras = [f for f in os.listdir(path_caras) if f.endswith(".jpg")]
 
 # Entrena caras
 for foto in fotos_caras:
@@ -54,22 +55,28 @@ while True:
         nombres_detectados.append(nombre)
 
     # Dibuja rectángulos y nombres en el frame
-    for (top, derecha, abajo, izquierda), nombre in zip(face_locations, nombres_detectados):
+    for (top, derecha, abajo, izquierda), nombre in zip(
+        face_locations, nombres_detectados
+    ):
         top *= 4
         derecha *= 4
         abajo *= 4
         izquierda *= 4
 
         cv2.rectangle(frame, (izquierda, top), (derecha, abajo), (0, 0, 255), 2)
-        
-        cv2.rectangle(frame, (izquierda, abajo - 35), (derecha, abajo), (0, 0, 255), cv2.FILLED)
+
+        cv2.rectangle(
+            frame, (izquierda, abajo - 35), (derecha, abajo), (0, 0, 255), cv2.FILLED
+        )
 
     fuente = cv2.FONT_HERSHEY_DUPLEX
-    
-    cv2.putText(frame, nombre, (izquierda + 6, abajo - 6), fuente, 1.0, (255, 255, 255), 1)
+
+    cv2.putText(
+        frame, nombre, (izquierda + 6, abajo - 6), fuente, 1.0, (255, 255, 255), 1
+    )
 
     # Muestra frame con caras reconocidas
-    cv2.imshow('Video', frame)
-# Si se presiona 'q', sale del ciclo
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    cv2.imshow("Video", frame)
+    # Si se presiona 'q', sale del ciclo
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break

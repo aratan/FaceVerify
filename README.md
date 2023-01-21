@@ -33,3 +33,5 @@ This application demonstrates the capabilities of Python and Artificial Vision i
 
 # The Team: AratanCoders
 Víctor Arbiol
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
