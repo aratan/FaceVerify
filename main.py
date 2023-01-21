@@ -3,9 +3,9 @@
 # img = cv2.imread("./image.jpg")
 # print(img)
 
-import face_recognition
-import cv2
 import os
+import cv2
+import face_recognition
 import numpy as np
 
 # Variables de caras encodadas y nombres de las caras
