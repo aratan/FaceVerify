@@ -2,82 +2,74 @@
 #import cv2
 #img = cv2.imread("./image.jpg")
 #print(img)
-
 import face_recognition
 import cv2
-import numpy as np
 import os
-import glob
+import numpy as np
 
+# Variables de caras encodadas y nombres de las caras
 encodings_caras = []
-nombre_de_caras = []
+nombres_caras = []
+
+# Directorio actual
 directorio = os.getcwd()
-path = os.path.join(directorio, 'caras/')
-Lista_de_fotos = [f for f in glob.glob(path+'*.jpg')]
-Numero_de_Fotos = len(Lista_de_fotos)
-nombres = Lista_de_fotos.copy()
+path_caras = os.path.join(directorio, 'caras/')
+
+# Obtiene lista de fotos de caras en el directorio
+fotos_caras = [f for f in os.listdir(path_caras) if f.endswith('.jpg')]
 
 # Entrena caras
-for i in range(Numero_de_Fotos):
-    globals()['image_{}'.format(i)] = face_recognition.load_image_file(Lista_de_fotos[i])
-    globals()['image_encoding_{}'.format(i)] = face_recognition.face_encodings(globals()['image_{}'.format(i)])[0]
-    encodings_caras.append(globals()['image_encoding_{}'.format(i)])
+for foto in fotos_caras:
+    # Carga imagen de cara y obtiene encoding
+    imagen = face_recognition.load_image_file(os.path.join(path_caras, foto))
+    encoding = face_recognition.face_encodings(imagen)[0]
+    encodings_caras.append(encoding)
+    nombres_caras.append(foto)
 
-# Crea Matriz de nombres conocidos
-    nombres[i] = nombres[i].replace(directorio, "")  
-    nombre_de_caras.append(nombres[i])
-    
-    print(nombres[i])
-    print(nombre_de_caras)
-
-face_locations = []
-face_encodings = []
-face_nombres = []
-process_this_frame = True
-
+# Inicia captura de video
 video_capture = cv2.VideoCapture(0)
+
 while True:
+    # Obtiene frame de video
     ret, frame = video_capture.read()
+    # Redimensiona el frame
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    # Convierte a RGB
     rgb_small_frame = small_frame[:, :, ::-1]
 
-    if process_this_frame:
-        face_locations = face_recognition.face_locations( rgb_small_frame)
-        face_encodings = face_recognition.face_encodings( rgb_small_frame, face_locations)
-    
-    face_nombres = []
+    # Encuentra locaciones de caras y encodings en el frame
+    face_locations = face_recognition.face_locations(rgb_small_frame)
+    face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+    nombres_detectados = []
 
-    for face_encoding in face_encodings:
-        matches = face_recognition.compare_faces (encodings_caras, face_encoding)
-        name = "Unknown"
+    # Compara encodings de caras detectadas con encodings entrenadas
+    for encoding in face_encodings:
+        matches = face_recognition.compare_faces(encodings_caras, encoding)
+        nombre = "Desconocido"
+        distancias_cara = face_recognition.face_distance(encodings_caras, encoding)
+        mejor_coincidencia = np.argmin(distancias_cara)
 
-    face_distances = face_recognition.face_distance( encodings_caras, face_encoding)
+        if matches[mejor_coincidencia]:
+            nombre = nombres_caras[mejor_coincidencia]
+        nombres_detectados.append(nombre)
 
-    best_match_index = np.argmin(face_distances)
-
-    if matches[best_match_index]:
-        name = nombre_de_caras[best_match_index]
-        face_nombres.append(name)
-    
-    process_this_frame = not process_this_frame
-
-# Display the results
-
-    for (top, right, bottom, left), name in zip(face_locations, face_nombres):
+    # Dibuja rectángulos y nombres en el frame
+    for (top, derecha, abajo, izquierda), nombre in zip(face_locations, nombres_detectados):
         top *= 4
-        right *= 4
-        bottom *= 4
-        left *= 4
-# Draw a rectangle around the face
-    cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        derecha *= 4
+        abajo *= 4
+        izquierda *= 4
 
-# Input text label with a name below the face
-    cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-    font = cv2.FONT_HERSHEY_DUPLEX
-    cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        cv2.rectangle(frame, (izquierda, top), (derecha, abajo), (0, 0, 255), 2)
+        
+        cv2.rectangle(frame, (izquierda, abajo - 35), (derecha, abajo), (0, 0, 255), cv2.FILLED)
 
-# Display the resulting image
+    fuente = cv2.FONT_HERSHEY_DUPLEX
+    
+    cv2.putText(frame, nombre, (izquierda + 6, abajo - 6), fuente, 1.0, (255, 255, 255), 1)
+
+    # Muestra frame con caras reconocidas
     cv2.imshow('Video', frame)
-# Hit 'q' on the keyboard to quit!
+# Si se presiona 'q', sale del ciclo
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        pass
+        break
