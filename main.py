@@ -1,4 +1,7 @@
 # por el terminal externo funciona perfecto
+#import cv2
+#img = cv2.imread("./image.jpg")
+#print(img)
 
 import face_recognition
 import cv2
