@@ -2,11 +2,14 @@
 # import cv2
 # img = cv2.imread("./image.jpg")
 # print(img)
-
+## pip install dlib-19.22.99-cp39-cp39-win_amd64.whl
+''' https://github.com/tobyyosoba777/Computer-Vision-OpenCv-Python/blob/main/Libraries/dlib-19.22.99-cp39-cp39-win_amd64.whl
+'''
 import os
 import cv2
 import face_recognition
 import numpy as np
+from deepface import DeepFace
 
 # Variables de caras encodadas y nombres de las caras
 encodings_caras = []
