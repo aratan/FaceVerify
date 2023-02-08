@@ -49,13 +49,14 @@ while True:
     # Compara encodings de caras detectadas con encodings entrenadas
     for encoding in face_encodings:
         matches = face_recognition.compare_faces(encodings_caras, encoding)
-        nombre = "Desconocido"
+        nombre = "Prohibido->Desconocido"
         distancias_cara = face_recognition.face_distance(encodings_caras, encoding)
         mejor_coincidencia = np.argmin(distancias_cara)
 
         if matches[mejor_coincidencia]:
             nombre = nombres_caras[mejor_coincidencia]
         nombres_detectados.append(nombre)
+        ## aqui la emocion y for para != lineas
 
     # Dibuja rectángulos y nombres en el frame
     for (top, derecha, abajo, izquierda), nombre in zip(
@@ -73,13 +74,18 @@ while True:
         )
 
     fuente = cv2.FONT_HERSHEY_DUPLEX
-
-    cv2.putText(
-        frame, nombre, (izquierda + 6, abajo - 6), fuente, 1.0, (255, 255, 255), 1
+    try:
+        cv2.putText(
+        frame, "Acceso" + nombre, (izquierda + 6, abajo - 6), fuente, 1.0, (255, 255, 255), 1
     )
-
+    
+        
     # Muestra frame con caras reconocidas
-    cv2.imshow("Video", frame)
+        cv2.imshow("Video", frame)
     # Si se presiona 'q', sale del ciclo
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    except:
+        print("Pongase enfrente de la camara")
+    finally:
+        pass
